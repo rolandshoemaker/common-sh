@@ -16,7 +16,7 @@ an attempt to make writing bourne shell scripts somewhat quickier.
 also I wrote a python tool (`quick-doc.py`) for generating markdown from comments
 in shell scripts based on the following comment format
 
-```
+```sh
 # desc: this is the description, any *markdown* can be
 # desc: put here since we are just passing it through
 # desc: as markdown!
