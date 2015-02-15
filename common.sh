@@ -32,7 +32,9 @@ err() {
 }
 
 # desc: do you has $1?
-# usage: has curl
+# usage: if has curl; then
+# usage: 	p "you have curl :o"
+# usage: fi
 has() {
 	if command -v $1 > /dev/null 2>&1; then
 		return 0

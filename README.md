@@ -78,7 +78,9 @@ err() {
 do you has $1?
 
 ```sh
-has curl
+if has curl; then
+	p "you have curl :o"
+fi
 ```
 
 #### source
