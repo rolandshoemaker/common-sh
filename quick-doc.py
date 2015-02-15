@@ -64,7 +64,7 @@ def process_block(block):
 def generate_toc(blocks):
 	functions = [b["name"] for b in blocks]
 	toc_body = "### table of contents\n\n"
-	toc_body += "\n".join(["* [%s](#%s)" % (f, f) for f in functions])
+	toc_body += "\n".join(["* [`%s`](#%s)" % (f, f) for f in functions])
 	return toc_body
 
 function_blocks = []
