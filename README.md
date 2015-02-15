@@ -51,7 +51,7 @@ but the comment above the function should explain which other functions it depen
 
 ### `p`
 
-basic print
+basic print function, you know, like echo but one character...
 
 ```sh
 p "print func yo"
