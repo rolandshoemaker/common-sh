@@ -53,7 +53,9 @@ abort
 			ECODE=1
 		fi
 		exit $ECODE
-	}#### requires
+	}
+
+#### requires
 
 * [p](#p)
 
@@ -87,7 +89,9 @@ what does this script NEED
 		if ! has $1; then
 			err "$1 is required for this script!"
 		fi
-	}#### requires
+	}
+
+#### requires
 
 * [has](#has)
 * [err](#err)
@@ -112,7 +116,9 @@ make sure last command succeded
 			fi
 			err "$1" $ECODE
 		fi
-	}#### requires
+	}
+
+#### requires
 
 * [err](#err)
 
@@ -158,7 +164,9 @@ get y/n prompt from user
 		    esac
 		done
 		eval $__answervar=$resp
-	}#### requires
+	}
+
+#### requires
 
 * [p](#p)
 
@@ -182,7 +190,9 @@ download a file with (curl->wget) fallback
 				err "neither curl nor wget are available!"
 			fi
 		fi
-	}#### requires
+	}
+
+#### requires
 
 * [p](#p)
 * [err](#err)

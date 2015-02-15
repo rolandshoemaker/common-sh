@@ -57,7 +57,7 @@ def process_block(block):
 	body += "\n".join(["\t%s" % (l) for l in block["usage"]])+"\n\n"
 	body += "#### source\n\n"+"\n".join(["\t%s" % (l) for l in block["source"]])
 	if len(block["requires"]) > 0:
-		body += "#### requires\n\n"
+		body += "\n\n#### requires\n\n"
 		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
 	return body
 
