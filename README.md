@@ -30,7 +30,9 @@ basic print
 
 ```sh
 p "print func yo"
-```#### source
+```
+
+#### source
 
 ```sh
 p() {
@@ -38,13 +40,17 @@ p() {
 }
 ```
 
+
+
 ### `err`
 
 abort
 
 ```sh
 err "what happd" [OPTIONAL_ERROR_CODE]
-```#### source
+```
+
+#### source
 
 ```sh
 err() {
@@ -59,6 +65,8 @@ err() {
 }
 ```
 
+
+
 #### requires
 
 * [p](#p)
@@ -71,7 +79,9 @@ do you has $1?
 
 ```sh
 has curl
-```#### source
+```
+
+#### source
 
 ```sh
 has() {
@@ -83,13 +93,17 @@ has() {
 }
 ```
 
+
+
 ### `require`
 
 what does this script NEED
 
 ```sh
 require curl
-```#### source
+```
+
+#### source
 
 ```sh
 require() {
@@ -98,6 +112,8 @@ require() {
 	fi
 }
 ```
+
+
 
 #### requires
 
@@ -113,7 +129,9 @@ make sure last command succeded
 ```sh
 command_that_might_fail
 ok "well that failed damn" [OPTIONAL_ERROR_CODE]
-```#### source
+```
+
+#### source
 
 ```sh
 ok() {
@@ -128,6 +146,8 @@ ok() {
 }
 ```
 
+
+
 #### requires
 
 * [err](#err)
@@ -140,7 +160,9 @@ get y/n prompt from user
 
 ```sh
 get_yn result_var "question to ask" [true|false]
-```#### source
+```
+
+#### source
 
 ```sh
 get_yn() {
@@ -178,6 +200,8 @@ get_yn() {
 }
 ```
 
+
+
 #### requires
 
 * [p](#p)
@@ -190,7 +214,9 @@ download a file with (curl->wget) fallback
 
 ```sh
 download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
-```#### source
+```
+
+#### source
 
 ```sh
 download() {
@@ -205,6 +231,8 @@ download() {
 	fi
 }
 ```
+
+
 
 #### requires
 
