@@ -5,6 +5,8 @@ INPUT = "common.sh"
 INPUT_README = "README-nodoc.md"
 OUTPUT_README = "README.md"
 
+SYNTAX = "sh"
+
 FUNC_START = "([a-zA-Z_]+)\(\) {"
 FUNC_END = "^}$"
 
@@ -51,11 +53,17 @@ def find_func_end(start_line):
 		if re.match(FUNC_END, SOURCE[line_num]):
 			return line_num+1
 
+def code_block(code):
+	return "```%s\n%s\n```" % (SYNTAX, "\n".join(code))
+
 def process_block(block):
 	body = "### `%s`" % (block["name"])+"\n\n"
 	body += "\n".join(block["description"])+"\n\n"
-	body += "\n".join(["\t%s" % (l) for l in block["usage"]])+"\n\n"
-	body += "#### source\n\n"+"\n".join(["\t%s" % (l) for l in block["source"]])
+	# body += "\n".join(["\t%s" % (l) for l in block["usage"]])+"\n\n"
+	body += code_block(block["usage"])
+	body += "#### source\n\n" 
+	# body += "\n".join(["\t%s" % (l) for l in block["source"]])
+	body += code_block(block["source"])
 	if len(block["requires"]) > 0:
 		body += "\n\n#### requires\n\n"
 		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
