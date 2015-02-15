@@ -52,13 +52,13 @@ def find_func_end(start_line):
 			return line_num+1
 
 def process_block(block):
-	body = "### %s" % (block["name"])+"\n\n"
+	body = "### `%s`" % (block["name"])+"\n\n"
 	body += "\n".join(block["description"])+"\n\n"
 	body += "\n".join(["\t%s" % (l) for l in block["usage"]])+"\n\n"
+	body += "#### source\n\n"+"\n".join(["\t%s" % (l) for l in block["source"]])
 	if len(block["requires"]) > 0:
 		body += "#### requires\n\n"
 		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
-	body += "#### source\n\n"+"\n".join(["\t%s" % (l) for l in block["source"]])
 	return body
 
 function_blocks = []

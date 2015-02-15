@@ -14,7 +14,7 @@ but the comment above the function should explain which other functions it depen
 ## the good part!
 
 
-### p
+### `p`
 
 basic print
 
@@ -26,15 +26,11 @@ basic print
 		echo "$1"
 	}
 
-### err
+### `err`
 
 abort
 
 	err "what happd" [OPTIONAL_ERROR_CODE]
-
-#### requires
-
-* [p](#p)
 
 #### source
 
@@ -47,9 +43,13 @@ abort
 			ECODE=1
 		fi
 		exit $ECODE
-	}
+	}#### requires
 
-### has
+* [p](#p)
+
+
+
+### `has`
 
 do you has $1?
 
@@ -65,16 +65,11 @@ do you has $1?
 		fi
 	}
 
-### require
+### `require`
 
 what does this script NEED
 
 	require curl
-
-#### requires
-
-* [has](#has)
-* [err](#err)
 
 #### source
 
@@ -82,18 +77,19 @@ what does this script NEED
 		if ! has $1; then
 			err "$1 is required for this script!"
 		fi
-	}
+	}#### requires
 
-### ok
+* [has](#has)
+* [err](#err)
+
+
+
+### `ok`
 
 make sure last command succeded
 
 	command_that_might_fail
 	ok "well that failed damn" [OPTIONAL_ERROR_CODE]
-
-#### requires
-
-* [err](#err)
 
 #### source
 
@@ -106,17 +102,17 @@ make sure last command succeded
 			fi
 			err "$1" $ECODE
 		fi
-	}
+	}#### requires
 
-### get_yn
+* [err](#err)
+
+
+
+### `get_yn`
 
 get y/n prompt from user
 
 	get_yn result_var "question to ask" [true|false]
-
-#### requires
-
-* [p](#p)
 
 #### source
 
@@ -152,18 +148,17 @@ get y/n prompt from user
 		    esac
 		done
 		eval $__answervar=$resp
-	}
+	}#### requires
 
-### download
+* [p](#p)
+
+
+
+### `download`
 
 download a file with (curl->wget) fallback
 
 	download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
-
-#### requires
-
-* [p](#p)
-* [err](#err)
 
 #### source
 
@@ -177,4 +172,8 @@ download a file with (curl->wget) fallback
 				err "neither curl nor wget are available!"
 			fi
 		fi
-	}
+	}#### requires
+
+* [p](#p)
+* [err](#err)
+
