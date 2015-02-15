@@ -11,7 +11,7 @@
 # licensed under the MIT license <http://opensource.org/licenses/MIT>
 #
 
-# desc: basic print
+# desc: basic print function, you know, like echo but one character...
 # usage: p "print func yo"
 p() {
 	echo "$1"
