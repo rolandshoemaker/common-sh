@@ -9,9 +9,25 @@
 #
 ```
 
-a *library* (i use the term extremely liberally) of *Bourne* shell functions
+a *library* (i use the term ***extremely*** liberally) of *Bourne* shell functions
 (`sh` not `bash`, but most of the functions should work in `bash` too i guess) in
 an attempt to make writing bourne shell scripts somewhat quickier.
+
+also I wrote a python tool (`quick-doc.py`) for generating markdown from comments
+in shell scripts based on the following comment format
+
+```
+# desc: this is the description, any *markdown* can be
+# desc: put here since we are just passing it through
+# desc: as markdown!
+# usage: function "argument" [optional argument]
+# requires: required_function another_required
+a_function() {
+	echo "woop woop"
+}
+```
+
+output of it can be seen [here](#the-good-part)!
 
 ## usage
 

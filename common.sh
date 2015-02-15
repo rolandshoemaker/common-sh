@@ -45,8 +45,7 @@ has() {
 
 # desc: what does this script NEED
 # usage: require curl
-# requires: has
-# requires: err
+# requires: has err
 require() {
 	if ! has $1; then
 		err "$1 is required for this script!"
@@ -109,8 +108,7 @@ get_yn() {
 
 # desc: download a file with (curl->wget) fallback
 # usage: download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
-# requires: p
-# requires: err
+# requires: p err
 download() {
 	if has curl; then
 

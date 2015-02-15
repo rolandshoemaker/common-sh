@@ -45,7 +45,7 @@ def dissemble_preamble(preamble):
 		elif p.startswith(USAGE_PRE):
 			usage.append(p[len(USAGE_PRE):])
 		elif p.startswith(REQUIRE_PRE):
-			requirements.append(p[len(REQUIRE_PRE):])
+			requirements += p[len(REQUIRE_PRE):].split(" ")
 	return description, usage, requirements
 
 def find_func_end(start_line):
@@ -63,10 +63,10 @@ def process_block(block):
 	body += code_block(block["usage"])+"\n\n"
 	body += "#### source\n\n" 
 	# body += "\n".join(["\t%s" % (l) for l in block["source"]])
-	body += code_block(block["source"])+"\n\n"
+	body += code_block(block["source"])
 	if len(block["requires"]) > 0:
 		body += "\n\n#### requires\n\n"
-		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
+		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])
 	return body
 
 def generate_toc(blocks):
