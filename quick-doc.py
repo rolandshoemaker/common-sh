@@ -61,6 +61,12 @@ def process_block(block):
 		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
 	return body
 
+def generate_toc(blocks):
+	functions = [b["name"] for b in blocks]
+	toc_body = "### table of contents\n\n"
+	toc_body += "\n".join(["* [%s](#%s)" % (f, f) for f in functions])
+	return toc_body
+
 function_blocks = []
 
 for S_LNUM in range(0, len(SOURCE)):
@@ -79,6 +85,7 @@ for S_LNUM in range(0, len(SOURCE)):
 		})
 
 markdown_output = []
+markdown_output.append(generate_toc(function_blocks))
 for block in function_blocks:
 	markdown_output.append(process_block(block))
 

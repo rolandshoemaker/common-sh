@@ -14,6 +14,16 @@ but the comment above the function should explain which other functions it depen
 ## the good part!
 
 
+### table of contents
+
+* [p](#p)
+* [err](#err)
+* [has](#has)
+* [require](#require)
+* [ok](#ok)
+* [get_yn](#get_yn)
+* [download](#download)
+
 ### `p`
 
 basic print
