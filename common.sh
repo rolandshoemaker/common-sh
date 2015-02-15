@@ -68,7 +68,9 @@ ok() {
 	fi
 }
 
-# desc: get y/n prompt from user
+# desc: get y/n prompt from user, if the bool is set at the end
+# desc: then that will be the default answer (if user just presses
+# desc: enter).
 # usage: get_yn result_var "question to ask" [true|false]
 # requires: p
 get_yn() {
