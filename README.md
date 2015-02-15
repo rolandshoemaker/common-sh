@@ -158,7 +158,9 @@ ok() {
 
 ### `get_yn`
 
-get y/n prompt from user
+get y/n prompt from user, if the bool is set at the end
+then that will be the default answer (if user just presses
+enter).
 
 ```sh
 get_yn result_var "question to ask" [true|false]
