@@ -1,11 +1,25 @@
-# basic print
+#!/bin/sh
+#                                                                        __         
+#                                                                       /\ \        
+#   ___    ___     ___ ___     ___ ___     ___     ___              ____\ \ \___    
+#  /'___\ / __`\ /' __` __`\ /' __` __`\  / __`\ /' _ `\  _______  /',__\\ \  _ `\  
+# /\ \__//\ \_\ \/\ \/\ \/\ \/\ \/\ \/\ \/\ \_\ \/\ \/\ \/\______\/\__, `\\ \ \ \ \ 
+# \ \____\ \____/\ \_\ \_\ \_\ \_\ \_\ \_\ \____/\ \_\ \_\/______/\/\____/ \ \_\ \_\
+#  \/____/\/___/  \/_/\/_/\/_/\/_/\/_/\/_/\/___/  \/_/\/_/         \/___/   \/_/\/_/
+#
+#
+# licensed under the MIT license <http://opensource.org/licenses/MIT>
+#
+
+# desc: basic print
 # usage: p "print func yo"
 p() {
 	echo "$1"
 }
 
-# abort
+# desc: abort
 # usage: err "what happd" [OPTIONAL_ERROR_CODE]
+# requires: p
 err() {
 	local ECODE
 	p "ERROR: $1" >&2
@@ -17,7 +31,7 @@ err() {
 	exit $ECODE
 }
 
-# do you has $1?
+# desc: do you has $1?
 # usage: has curl
 has() {
 	if command -v $1 > /dev/null 2>&1; then
@@ -27,17 +41,20 @@ has() {
 	fi
 }
 
-# what does this script NEED
+# desc: what does this script NEED
 # usage: require curl
+# requires: has
+# requires: err
 require() {
 	if ! has $1; then
 		err "$1 is required for this script!"
 	fi
 }
 
-# make sure last command succeded
+# desc: make sure last command succeded
 # usage: command_that_might_fail
 # usage: ok "well that failed damn" [OPTIONAL_ERROR_CODE]
+# requires: err
 ok() {
 	if [ $? != 0 ]; then
 		if [ "$#" -eq "2" ]; then
@@ -49,8 +66,9 @@ ok() {
 	fi
 }
 
-# get y/n prompt from user
+# desc: get y/n prompt from user
 # usage: get_yn result_var "question to ask" [true|false]
+# requires: p
 get_yn() {
 	local __answervar=$1
 	local resp
@@ -85,8 +103,18 @@ get_yn() {
 	eval $__answervar=$resp
 }
 
-# download a file with (curl->wget) fallback
+# desc: download a file with (curl->wget) fallback
 # usage: download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
+# requires: p
+# requires: err
 download() {
+	if has curl; then
 
+	else
+		if has wget; then
+
+		else
+			err "neither curl nor wget are available!"
+		fi
+	fi
 }
