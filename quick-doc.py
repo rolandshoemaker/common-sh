@@ -60,10 +60,10 @@ def process_block(block):
 	body = "### `%s`" % (block["name"])+"\n\n"
 	body += "\n".join(block["description"])+"\n\n"
 	# body += "\n".join(["\t%s" % (l) for l in block["usage"]])+"\n\n"
-	body += code_block(block["usage"])
+	body += code_block(block["usage"])+"\n\n"
 	body += "#### source\n\n" 
 	# body += "\n".join(["\t%s" % (l) for l in block["source"]])
-	body += code_block(block["source"])
+	body += code_block(block["source"])+"\n\n"
 	if len(block["requires"]) > 0:
 		body += "\n\n#### requires\n\n"
 		body += "\n".join(["* [%s](#%s)" % (r, r) for r in block["requires"]])+"\n\n"
