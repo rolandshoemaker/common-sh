@@ -60,10 +60,11 @@ require() {
 # requires: err
 ok() {
 	if [ $? != 0 ]; then
+		local ECODE
 		if [ "$#" -eq "2" ]; then
-			local ECODE=$2
+			ECODE=$2
 		else
-			local ECODE=1
+			ECODE=1
 		fi
 		err "$1" $ECODE
 	fi
