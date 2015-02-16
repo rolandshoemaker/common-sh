@@ -17,7 +17,7 @@ p() {
 	echo "$1"
 }
 
-# desc: abort
+# desc: abort program with error message and optional error code (default is 1).
 # usage: err "what happd" [OPTIONAL_ERROR_CODE]
 # requires: p
 err() {
@@ -31,7 +31,7 @@ err() {
 	exit $ECODE
 }
 
-# desc: do you has $1?
+# desc: do you has $1? returns 0 or 1.
 # usage: if has curl; then
 # usage: 	p "you have curl :o"
 # usage: fi
@@ -43,7 +43,7 @@ has() {
 	fi
 }
 
-# desc: what does this script NEED
+# desc: what does this script NEED, aborts if user doesn't have it.
 # usage: require curl
 # requires: has err
 require() {
@@ -52,9 +52,11 @@ require() {
 	fi
 }
 
-# desc: make sure last command succeded
+# desc: make sure last command succeded, abort if it didn't
+# desc: as with err you can set a optional error code to return
+# desc: (default is 1).
 # usage: command_that_might_fail
-# usage: ok "well that failed damn" [OPTIONAL_ERROR_CODE]
+# usage: ok "well that failed then didn't it" [OPTIONAL_ERROR_CODE]
 # requires: err
 ok() {
 	if [ $? != 0 ]; then
@@ -106,17 +108,28 @@ get_yn() {
 	eval $__answervar=$resp
 }
 
-# desc: download a file with (curl->wget) fallback
-# usage: download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
+# desc: download a file with (curl->wget) fallback, aborts if niether tools
+# desc: are available.
+# usage: download "http://www.google.com" [OPTIONAL_DOWNLOAD_PATH]
 # requires: p err
 download() {
+	local dwn_cmd
 	if has curl; then
-
+		if [ "$#" -eq "2" ]; then
+			dwn_cmd="curl -o $2"
+		else
+			dwn_cmd="curl -O"
+		fi
 	else
 		if has wget; then
-
+			dwn_cmd="wget"
+			if [ "$#" -eq "2" ]; then
+				dwn_cmd="$dwn_cmd -O $s"
+			fi
 		else
 			err "neither curl nor wget are available!"
 		fi
 	fi
+
+	$dwn_cmd $1
 }
