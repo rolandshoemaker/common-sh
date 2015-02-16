@@ -55,7 +55,7 @@ p() {
 
 ## `err`
 
-abort
+abort program with error message and optional error code (default is 1).
 
 ```sh
 err "what happd" [OPTIONAL_ERROR_CODE]
@@ -78,11 +78,11 @@ err() {
 
 ### Requires
 
-* [p](#p)
+* [`p`](#p)
 
 ## `has`
 
-do you has $1?
+do you has $1? returns 0 or 1.
 
 ```sh
 if has curl; then
@@ -104,7 +104,7 @@ has() {
 
 ## `require`
 
-what does this script NEED
+what does this script NEED, aborts if user doesn't have it.
 
 ```sh
 require curl
@@ -122,16 +122,18 @@ require() {
 
 ### Requires
 
-* [has](#has)
-* [err](#err)
+* [`has`](#has)
+* [`err`](#err)
 
 ## `ok`
 
-make sure last command succeded
+make sure last command succeded, abort if it didn't
+as with err you can set a optional error code to return
+(default is 1).
 
 ```sh
 command_that_might_fail
-ok "well that failed damn" [OPTIONAL_ERROR_CODE]
+ok "well that failed then didn't it" [OPTIONAL_ERROR_CODE]
 ```
 
 ### Source
@@ -151,7 +153,7 @@ ok() {
 
 ### Requires
 
-* [err](#err)
+* [`err`](#err)
 
 ## `get_yn`
 
@@ -203,33 +205,44 @@ get_yn() {
 
 ### Requires
 
-* [p](#p)
+* [`p`](#p)
 
 ## `download`
 
-download a file with (curl->wget) fallback
+download a file with (curl->wget) fallback, aborts if niether tools
+are available.
 
 ```sh
-download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
+download "http://www.google.com" [OPTIONAL_DOWNLOAD_PATH]
 ```
 
 ### Source
 
 ```sh
 download() {
+	local dwn_cmd
 	if has curl; then
-
+		if [ "$#" -eq "2" ]; then
+			dwn_cmd="curl -o $2"
+		else
+			dwn_cmd="curl -O"
+		fi
 	else
 		if has wget; then
-
+			dwn_cmd="wget"
+			if [ "$#" -eq "2" ]; then
+				dwn_cmd="$dwn_cmd -O $s"
+			fi
 		else
 			err "neither curl nor wget are available!"
 		fi
 	fi
+
+	$dwn_cmd $1
 }
 ```
 
 ### Requires
 
-* [p](#p)
-* [err](#err)
+* [`p`](#p)
+* [`err`](#err)
