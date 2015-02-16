@@ -79,6 +79,7 @@ ok() {
 # usage: fi
 # requires: p
 get_yn() {
+	local prompt
 	local resp
 	local default
 	local question="$1"
@@ -91,7 +92,7 @@ get_yn() {
 			default=1
 		fi
 	else
-		local prompt="y/n"
+		prompt="y/n"
 	fi
 	while true; do
 	    read -p "$question [$prompt]: " yn
