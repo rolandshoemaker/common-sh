@@ -242,7 +242,6 @@ download() {
 			err "neither curl nor wget are available!"
 		fi
 	fi
-
 	$dwn_cmd "$1"
 }
 ```
