@@ -73,9 +73,9 @@ ok() {
 # desc: then that will be the default answer (if user just presses
 # desc: enter).
 # usage: if get_yn "question to ask" [true|false]; then
-# usage:   p "they said yes!"
+# usage:     p "they said yes!"
 # usage: else
-# usage:   p "oh noooo"
+# usage:     p "oh noooo"
 # usage: fi
 # requires: p
 get_yn() {
