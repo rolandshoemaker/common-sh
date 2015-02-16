@@ -163,9 +163,9 @@ enter).
 
 ```sh
 if get_yn "question to ask" [true|false]; then
-    p "they said yes!"
+  p "they said yes!"
 else
-    p "oh noooo"
+  p "oh noooo"
 fi
 ```
 
