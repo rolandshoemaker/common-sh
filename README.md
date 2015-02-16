@@ -162,19 +162,22 @@ then that will be the default answer (if user just presses
 enter).
 
 ```sh
-get_yn result_var "question to ask" [true|false]
+if get_yn "question to ask" [true|false]; then
+  p "they said yes!"
+else
+  p "oh noooo"
+fi
 ```
 
 ### Source
 
 ```sh
 get_yn() {
-	local __answervar=$1
 	local resp
 	local default
-	local question="$2"
-	if [ "$#" -eq "3" ]; then
-		if [ ! -z "$3" ]; then
+	local question="$1"
+	if [ "$#" -eq "2" ]; then
+		if [ ! -z "$2" ]; then
 			prompt="Y/n"
 			default=0
 		else
@@ -190,7 +193,7 @@ get_yn() {
 	        [yY]*) resp=0; break;;
 	        [nN]*) resp=1; break;;
 			"")
-				if [ "$#" -eq "3" ]; then
+				if [ "$#" -eq "2" ]; then
 					resp=$default; break
 				else
 					p "Please enter y or n."
@@ -199,7 +202,7 @@ get_yn() {
 	        *) p "Please enter y or n.";;
 	    esac
 	done
-	eval $__answervar=$resp
+	return $resp
 }
 ```
 
@@ -210,7 +213,8 @@ get_yn() {
 ## `download`
 
 download a file with (curl->wget) fallback, aborts if niether tools
-are available.
+are available. downloads to current directory or path provided
+(path should contain filename!)
 
 ```sh
 download "http://www.google.com" [OPTIONAL_DOWNLOAD_PATH]
@@ -238,11 +242,11 @@ download() {
 		fi
 	fi
 
-	$dwn_cmd $1
+	$dwn_cmd "$1"
 }
 ```
 
 ### Requires
 
-* [`p`](#p)
+* [`has`](#has)
 * [`err`](#err)
