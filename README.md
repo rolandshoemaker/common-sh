@@ -13,33 +13,21 @@ a *library* (i use the term ***extremely*** liberally) of *Bourne* shell functio
 (`sh` not `bash`, but most of the functions should work in `bash` too i guess) in
 an attempt to make writing bourne shell scripts somewhat quickier.
 
-also I wrote a python tool (`quick-doc.py`) for generating markdown from comments
-in shell scripts based on the following comment format
+also I wrote a python tool ([`quick-doc.py`](https://github.com/rolandshoemaker/quick-doc))
+for generating markdown from comments in shell scripts.
 
-```sh
-# desc: this is the description, any *markdown* can be
-# desc: put here since we are just passing it through
-# desc: as markdown!
-# usage: function "argument" [optional argument]
-# requires: required_function another_required
-a_function() {
-	echo "woop woop"
-}
-```
-
-output of it can be seen [here](#the-good-part)!
-
-## usage
+## Usage
 
 Either copy+paste the functions that you want into your sciprt, or source the entire file
 for the *everything* (although idk why you'd want to do this, then you'd have to
 distribute `common.sh`... w/e). a lot of the functions are interdependent on each other,
 but the comment above the function should explain which other functions it depends on.
 
-## the good part!
+## Documentation
 
+The good part!
 
-### table of contents
+## Table of Contents
 
 * [`p`](#p)
 * [`err`](#err)
@@ -49,7 +37,7 @@ but the comment above the function should explain which other functions it depen
 * [`get_yn`](#get_yn)
 * [`download`](#download)
 
-### `p`
+## `p`
 
 basic print function, you know, like echo but one character...
 
@@ -57,7 +45,7 @@ basic print function, you know, like echo but one character...
 p "print func yo"
 ```
 
-#### source
+### Source
 
 ```sh
 p() {
@@ -65,7 +53,7 @@ p() {
 }
 ```
 
-### `err`
+## `err`
 
 abort
 
@@ -73,7 +61,7 @@ abort
 err "what happd" [OPTIONAL_ERROR_CODE]
 ```
 
-#### source
+### Source
 
 ```sh
 err() {
@@ -88,11 +76,11 @@ err() {
 }
 ```
 
-#### requires
+### Requires
 
 * [p](#p)
 
-### `has`
+## `has`
 
 do you has $1?
 
@@ -102,7 +90,7 @@ if has curl; then
 fi
 ```
 
-#### source
+### Source
 
 ```sh
 has() {
@@ -114,7 +102,7 @@ has() {
 }
 ```
 
-### `require`
+## `require`
 
 what does this script NEED
 
@@ -122,7 +110,7 @@ what does this script NEED
 require curl
 ```
 
-#### source
+### Source
 
 ```sh
 require() {
@@ -132,12 +120,12 @@ require() {
 }
 ```
 
-#### requires
+### Requires
 
 * [has](#has)
 * [err](#err)
 
-### `ok`
+## `ok`
 
 make sure last command succeded
 
@@ -146,7 +134,7 @@ command_that_might_fail
 ok "well that failed damn" [OPTIONAL_ERROR_CODE]
 ```
 
-#### source
+### Source
 
 ```sh
 ok() {
@@ -161,11 +149,11 @@ ok() {
 }
 ```
 
-#### requires
+### Requires
 
 * [err](#err)
 
-### `get_yn`
+## `get_yn`
 
 get y/n prompt from user, if the bool is set at the end
 then that will be the default answer (if user just presses
@@ -175,7 +163,7 @@ enter).
 get_yn result_var "question to ask" [true|false]
 ```
 
-#### source
+### Source
 
 ```sh
 get_yn() {
@@ -213,11 +201,11 @@ get_yn() {
 }
 ```
 
-#### requires
+### Requires
 
 * [p](#p)
 
-### `download`
+## `download`
 
 download a file with (curl->wget) fallback
 
@@ -225,7 +213,7 @@ download a file with (curl->wget) fallback
 download "http://www.google.com/index.html" [OPTIONAL_DOWNLOAD_PATH]
 ```
 
-#### source
+### Source
 
 ```sh
 download() {
@@ -241,7 +229,7 @@ download() {
 }
 ```
 
-#### requires
+### Requires
 
 * [p](#p)
 * [err](#err)
