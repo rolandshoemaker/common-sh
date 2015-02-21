@@ -34,6 +34,7 @@ The good part!
 * [`has`](#has)
 * [`require`](#require)
 * [`ok`](#ok)
+* [`broke`](#broke)
 * [`get_yn`](#get_yn)
 * [`download`](#download)
 * [`extract`](#extract)
@@ -50,7 +51,7 @@ p "print func yo"
 
 ```sh
 p() {
-	echo "$1"
+    echo "$1"
 }
 ```
 
@@ -66,14 +67,14 @@ err "what happd" [OPTIONAL_ERROR_CODE]
 
 ```sh
 err() {
-	local ECODE
-	p "ERROR: $1" >&2
-	if [ "$#" -eq "2" ]; then
-		ECODE=$2
-	else
-		ECODE=1
-	fi
-	exit $ECODE
+    local ECODE
+    p "ERROR: $1" >&2
+    if [ "$#" -eq "2" ]; then
+        ECODE=$2
+    else
+        ECODE=1
+    fi
+    exit $ECODE
 }
 ```
 
@@ -87,7 +88,7 @@ do you has $1? returns 0 or 1.
 
 ```sh
 if has curl; then
-	p "you have curl :o"
+    p "you have curl :o"
 fi
 ```
 
@@ -95,11 +96,11 @@ fi
 
 ```sh
 has() {
-	if command -v $1 > /dev/null 2>&1; then
-		return 0
-	else
-		return 1
-	fi
+    if command -v $1 > /dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
 }
 ```
 
@@ -115,9 +116,9 @@ require curl
 
 ```sh
 require() {
-	if ! has $1; then
-		err "$1 is required for this script!"
-	fi
+    if ! has $1; then
+        err "$1 is required for this script!"
+    fi
 }
 ```
 
@@ -141,21 +142,45 @@ ok "well that failed then didn't it" [OPTIONAL_ERROR_CODE]
 
 ```sh
 ok() {
-	if [ $? != 0 ]; then
-		local ECODE
-		if [ "$#" -eq "2" ]; then
-			ECODE=$2
-		else
-			ECODE=1
-		fi
-		err "$1" $ECODE
-	fi
+    if [ $? != 0 ]; then
+        local ECODE
+        if [ "$#" -eq "2" ]; then
+            ECODE=$2
+        else
+            ECODE=1
+        fi
+        err "$1" $ECODE
+    fi
 }
 ```
 
 ### Requires
 
 * [`err`](#err)
+
+## `broke`
+
+returns true if the last command broke and doesn't exit
+like [`ok`](#ok) does
+
+```sh
+something_that_will_brak
+if broke; then
+  do_something
+fi
+```
+
+### Source
+
+```sh
+broke() {
+    if [ $? != 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+```
 
 ## `get_yn`
 
@@ -175,37 +200,37 @@ fi
 
 ```sh
 get_yn() {
-	local prompt
-	local resp
-	local default
-	local question="$1"
-	if [ "$#" -eq "2" ]; then
-		if [ ! -z "$2" ]; then
-			prompt="Y/n"
-			default=0
-		else
-			prompt="y/N"
-			default=1
-		fi
-	else
-		prompt="y/n"
-	fi
-	while true; do
-	    read -p "$question [$prompt]: " yn
-	    case $yn in
-	        [yY]*) resp=0; break;;
-	        [nN]*) resp=1; break;;
-			"")
-				if [ "$#" -eq "2" ]; then
-					resp=$default; break
-				else
-					p "Please enter y or n."
-				fi
-			;;
-	        *) p "Please enter y or n.";;
-	    esac
-	done
-	return $resp
+    local prompt
+    local resp
+    local default
+    local question="$1"
+    if [ "$#" -eq "2" ]; then
+        if [ ! -z "$2" ]; then
+            prompt="Y/n"
+            default=0
+        else
+            prompt="y/N"
+            default=1
+        fi
+    else
+        prompt="y/n"
+    fi
+    while true; do
+        read -p "$question [$prompt]: " yn
+        case $yn in
+            [yY]*) resp=0; break;;
+            [nN]*) resp=1; break;;
+            "")
+                if [ "$#" -eq "2" ]; then
+                    resp=$default; break
+                else
+                    p "Please enter y or n."
+                fi
+            ;;
+            *) p "Please enter y or n.";;
+        esac
+    done
+    return $resp
 }
 ```
 
@@ -227,25 +252,25 @@ download "http://www.google.com" [OPTIONAL_DOWNLOAD_PATH]
 
 ```sh
 download() {
-	local dwn_cmd
-	if has curl; then
-		dwn_cmd="curl"
-		if [ "$#" -eq "2" ]; then
-			dwn_cmd="$dwn_cmd -o $2"
-		else
-			dwn_cmd="$dwn_cmd -O"
-		fi
-	else
-		if has wget; then
-			dwn_cmd="wget"
-			if [ "$#" -eq "2" ]; then
-				dwn_cmd="$dwn_cmd -O $2"
-			fi
-		else
-			err "neither curl nor wget are available!"
-		fi
-	fi
-	$dwn_cmd "$1"
+    local dwn_cmd
+    if has curl; then
+        dwn_cmd="curl"
+        if [ "$#" -eq "2" ]; then
+            dwn_cmd="$dwn_cmd -o $2"
+        else
+            dwn_cmd="$dwn_cmd -O"
+        fi
+    else
+        if has wget; then
+            dwn_cmd="wget"
+            if [ "$#" -eq "2" ]; then
+                dwn_cmd="$dwn_cmd -O $2"
+            fi
+        else
+            err "neither curl nor wget are available!"
+        fi
+    fi
+    $dwn_cmd "$1"
 }
 ```
 
@@ -256,7 +281,7 @@ download() {
 
 ## `extract`
 
-extract a file (tar|tar.gz|zip|rar) to the local directory or a
+extract a file (tar|tar.gz|zip|rar) either to the current directory or a
 specified path. Based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
 written by [xvoland](https://github.com/xvoland).
 
@@ -268,77 +293,76 @@ extract thing.tar.gz [MAYBE/TO/HERE]
 
 ```sh
 extract() {
-	if [ -f "$1" ] ; then
-	    case "$1" in
-	      	*.tar|*.tar.bz2|*.bz2|*.tbz2)
-				require tar
-				local extractr="tar"
-
-				filename="${fullfile##*/}"
-				ext=="${filename#*.}"
-
-				if [ "$ext" = "tar" ]; then
-					extractr="$extractr xvf"
-				elif [ "$ext" = "tar.bz2" ] || [ "$ext" = "bz2" ] || [ "$ext" = "tbz2" ]; then
-					extractr="$extractr xvjf"
-				elif [ "$ext" = "tar.gz" ] || [ "$ext" = "tgz"] || [ "$ext" = "tar.xz" ]; then
-					extractr="$extractr xvzf"
-				fi
-
-	        	if [ "$#" -eq "2" ]; then
-	        		extractr="$extractr -C $2"
-	        	fi
-
-				$extractr
-
-				if [ "$#" -eq "2" ]; then
-	        		ok "couldn't extract $1 to $2"
-				else
-					ok "couldn't extract $1"
-	        	fi
-	      	;;
-	      	*.lzma)
-	      	    unlzma "$1"
-	      	;;
-	      	*.rar)
-	      	    local extractr="unrar x -ad $1"
-	      	    if [ "$#" -eq "2" ]; then
-	      	    	local current=`pwd`
-	      	    	if [ ! -d "$2" ]; then
-	      	    		mkdir -p "$2"
-	      	    	fi
-	      	    	cd "$2"
-	      	    fi
-	      	    $extractr
-	      	    if [ "$#" -eq "2" ]; then
-	      	    	cd "$current"
-	      	    fi
-	      	;;
-	      	*.gz)
-	      	    gunzip "$1"
-	      	;;
-	      	*.zip)
-	      	    unzip "$1"
-	      	;;
-	      	*.Z)
-	      	    uncompress "$1"
-	      	;;
-	      	*.7z)
-	      	    7z x "$1"
-	      	;;
-	      	*.xz)
-	      	    unxz "$1"
-	      	;;
-	      	*.exe)
-	      	    cabextract "$1"
-	      	;;
-	      	*)
-	      	    err "$1 - unknown archive type"
-	      	;;
-	    esac
-	else
-	    err "$1 does not exist"
-	fi
+    if [ -f "$1" ] ; then
+        case "$1" in
+          	*.tar|*.tar.bz2|*.bz2|*.tbz2)
+	            require tar
+	            local extractr="tar"
+	            filename="${fullfile##*/}"
+	            ext="${filename#*.}"
+	            if [ "$ext" = "tar" ]; then
+	                extractr="$extractr xvf"
+	            elif [ "$ext" = "tar.bz2" ] || [ "$ext" = "bz2" ] || [ "$ext" = "tbz2" ]; then
+	                extractr="$extractr xvjf"
+	            elif [ "$ext" = "tar.gz" ] || [ "$ext" = "tgz"] || [ "$ext" = "tar.xz" ]; then
+	                extractr="$extractr xvzf"
+	            fi
+	            if [ "$#" -eq "2" ]; then
+	                extractr="$extractr -C $2"
+	            fi
+	            $extractr
+	            if [ "$#" -eq "2" ]; then
+	                ok "couldn't extract $1 to $2"
+	            else
+	                ok "couldn't extract $1"
+	            fi
+	        ;;
+            *.rar)
+	            local extractr="unrar x -ad $1"
+	            if [ "$#" -eq "2" ]; then
+	                local current=`pwd`
+	                if [ ! -d "$2" ]; then
+	                    mkdir -p "$2"
+	                fi
+	                cd "$2"
+	            fi
+	            $extractr
+	            if broke; then
+	                if [ "$#" -eq "2" ]; then
+	                    cd "$current"
+	                    err "couldn't extract $1 to $2"
+	                fi
+	                err "couldn't extract $1"
+	            fi
+          	;;
+	        *.lzma)
+	            unlzma "$1"
+	        ;;
+	        *.gz)
+	            gunzip "$1"
+	        ;;
+	        *.zip)
+	            unzip "$1"
+	        ;;
+	        *.Z)
+	            uncompress "$1"
+	        ;;
+	        *.7z)
+	            7z x "$1"
+	        ;;
+	        *.xz)
+	            unxz "$1"
+	        ;;
+	        *.exe)
+	            cabextract "$1"
+	        ;;
+	        *)
+	            err "$1 - unknown archive type"
+	        ;;
+        esac
+    else
+        err "$1 does not exist"
+    fi
 }
 ```
 
@@ -346,3 +370,4 @@ extract() {
 
 * [`require`](#require)
 * [`err`](#err)
+* [`broke`](#broke)
