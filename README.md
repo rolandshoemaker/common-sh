@@ -38,6 +38,7 @@ The good part!
 * [`get_yn`](#get_yn)
 * [`download`](#download)
 * [`extract`](#extract)
+* [`fibonacci`](#fibonacci)
 
 ## `p`
 
@@ -161,7 +162,7 @@ ok() {
 ## `broke`
 
 returns true if the last command broke and doesn't exit
-like [`ok`](#ok) does
+like [`ok`](#ok) does.
 
 ```sh
 something_that_will_brak
@@ -282,7 +283,7 @@ download() {
 ## `extract`
 
 extract a file (tar|tar.gz|zip|rar) either to the current directory or a
-specified path. Based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
+specified path, based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
 written by [xvoland](https://github.com/xvoland).
 
 ```sh
@@ -378,3 +379,32 @@ extract() {
 * [`require`](#require)
 * [`err`](#err)
 * [`broke`](#broke)
+
+## `fibonacci`
+
+calculate the fibonacci sequence for ***n*** iterations.
+
+```sh
+fibonacii 10
+```
+
+### Source
+
+```sh
+fibonacci() {
+	local a=0
+	local b=1
+	local iters=0
+	while [ $iters -lt $1 ]; do
+		p "$iters: $a"
+		local n=`expr $a + $b`
+		a=$b
+		b=$n
+		iters=`expr $iters + 1`
+	done
+}
+```
+
+### Requires
+
+* [`p`](#p)
