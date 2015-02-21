@@ -71,7 +71,7 @@ ok() {
 }
 
 # desc: returns true if the last command broke and doesn't exit
-# desc: like [`ok`](#ok) does
+# desc: like [`ok`](#ok) does.
 # usage: something_that_will_brak
 # usage: if broke; then
 # usage:   do_something
@@ -156,7 +156,7 @@ download() {
 
 
 # desc: extract a file (tar|tar.gz|zip|rar) either to the current directory or a
-# desc: specified path. Based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
+# desc: specified path, based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
 # desc: written by [xvoland](https://github.com/xvoland).
 # usage: extract thing.tar.gz [MAYBE/TO/HERE]
 # requires: require err broke
@@ -238,4 +238,20 @@ extract() {
     else
         err "$1 does not exist"
     fi
+}
+
+# desc: calculate the fibonacci sequence for ***n*** iterations.
+# usage: fibonacii 10
+# requires: p
+fibonacci() {
+	local a=0
+	local b=1
+	local iters=0
+	while [ $iters -lt $1 ]; do
+		p "$iters: $a"
+		local n=`expr $a + $b`
+		a=$b
+		b=$n
+		iters=`expr $iters + 1`
+	done
 }
