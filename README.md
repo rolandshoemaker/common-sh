@@ -311,9 +311,9 @@ extract() {
 	                extractr="$extractr xvzf"
 	            fi
 	            if [ "$#" -eq "2" ]; then
-	                extractr="$extractr -C $2"
+	                extractr="$extractr -C '$2'"
 	            fi
-	            $extractr
+	            $extractr "$1"
 	            if [ "$#" -eq "2" ]; then
 	                ok "couldn't extract $1 to $2"
 	            else
@@ -326,7 +326,7 @@ extract() {
 	                if [ ! -d "$2" ]; then
 	                    mkdir -p "$2"
 	                fi
-	                cd "$2"
+	                cd -- "$2"
 	            fi
 	            $extractr
 	            if broke; then
@@ -397,7 +397,7 @@ gen_pw() {
 
 get external (internet facing) IP address using the
 [opendns](https://opendns.com) DNS resolver and dig.
-should add some curl/wget fallback type dealio...?
+should add some curl/wget fallback type dealio...? (should also accept -6 option for get ipv6 addr!
 
 ```sh
 myip=$( w_ip )
