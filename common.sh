@@ -121,16 +121,17 @@ get_yn() {
 download() {
 	local dwn_cmd
 	if has curl; then
+		dwn_cmd="curl"
 		if [ "$#" -eq "2" ]; then
-			dwn_cmd="curl -o $2"
+			dwn_cmd="$dwn_cmd -o $2"
 		else
-			dwn_cmd="curl -O"
+			dwn_cmd="$dwn_cmd -O"
 		fi
 	else
 		if has wget; then
 			dwn_cmd="wget"
 			if [ "$#" -eq "2" ]; then
-				dwn_cmd="$dwn_cmd -O $s"
+				dwn_cmd="$dwn_cmd -O $2"
 			fi
 		else
 			err "neither curl nor wget are available!"
