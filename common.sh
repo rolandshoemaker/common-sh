@@ -14,42 +14,42 @@
 # desc: basic print function, you know, like echo but one character...
 # usage: p "print func yo"
 p() {
-	echo "$1"
+    echo "$1"
 }
 
 # desc: abort program with error message and optional error code (default is 1).
 # usage: err "what happd" [OPTIONAL_ERROR_CODE]
 # requires: p
 err() {
-	local ECODE
-	p "ERROR: $1" >&2
-	if [ "$#" -eq "2" ]; then
-		ECODE=$2
-	else
-		ECODE=1
-	fi
-	exit $ECODE
+    local ECODE
+    p "ERROR: $1" >&2
+    if [ "$#" -eq "2" ]; then
+        ECODE=$2
+    else
+        ECODE=1
+    fi
+    exit $ECODE
 }
 
 # desc: do you has $1? returns 0 or 1.
 # usage: if has curl; then
-# usage: 	p "you have curl :o"
+# usage:     p "you have curl :o"
 # usage: fi
 has() {
-	if command -v $1 > /dev/null 2>&1; then
-		return 0
-	else
-		return 1
-	fi
+    if command -v $1 > /dev/null 2>&1; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # desc: what does this script NEED, aborts if user doesn't have it.
 # usage: require curl
 # requires: has err
 require() {
-	if ! has $1; then
-		err "$1 is required for this script!"
-	fi
+    if ! has $1; then
+        err "$1 is required for this script!"
+    fi
 }
 
 # desc: make sure last command succeded, abort if it didn't
@@ -59,15 +59,29 @@ require() {
 # usage: ok "well that failed then didn't it" [OPTIONAL_ERROR_CODE]
 # requires: err
 ok() {
-	if [ $? != 0 ]; then
-		local ECODE
-		if [ "$#" -eq "2" ]; then
-			ECODE=$2
-		else
-			ECODE=1
-		fi
-		err "$1" $ECODE
-	fi
+    if [ $? != 0 ]; then
+        local ECODE
+        if [ "$#" -eq "2" ]; then
+            ECODE=$2
+        else
+            ECODE=1
+        fi
+        err "$1" $ECODE
+    fi
+}
+
+# desc: returns true if the last command broke and doesn't exit
+# desc: like [`ok`](#ok) does
+# usage: something_that_will_brak
+# usage: if broke; then
+# usage:   do_something
+# usage: fi
+broke() {
+    if [ $? != 0 ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # desc: get y/n prompt from user, if the bool is set at the end
@@ -80,37 +94,37 @@ ok() {
 # usage: fi
 # requires: p
 get_yn() {
-	local prompt
-	local resp
-	local default
-	local question="$1"
-	if [ "$#" -eq "2" ]; then
-		if [ ! -z "$2" ]; then
-			prompt="Y/n"
-			default=0
-		else
-			prompt="y/N"
-			default=1
-		fi
-	else
-		prompt="y/n"
-	fi
-	while true; do
-	    read -p "$question [$prompt]: " yn
-	    case $yn in
-	        [yY]*) resp=0; break;;
-	        [nN]*) resp=1; break;;
-			"")
-				if [ "$#" -eq "2" ]; then
-					resp=$default; break
-				else
-					p "Please enter y or n."
-				fi
-			;;
-	        *) p "Please enter y or n.";;
-	    esac
-	done
-	return $resp
+    local prompt
+    local resp
+    local default
+    local question="$1"
+    if [ "$#" -eq "2" ]; then
+        if [ ! -z "$2" ]; then
+            prompt="Y/n"
+            default=0
+        else
+            prompt="y/N"
+            default=1
+        fi
+    else
+        prompt="y/n"
+    fi
+    while true; do
+        read -p "$question [$prompt]: " yn
+        case $yn in
+            [yY]*) resp=0; break;;
+            [nN]*) resp=1; break;;
+            "")
+                if [ "$#" -eq "2" ]; then
+                    resp=$default; break
+                else
+                    p "Please enter y or n."
+                fi
+            ;;
+            *) p "Please enter y or n.";;
+        esac
+    done
+    return $resp
 }
 
 # desc: download a file with (curl->wget) fallback, aborts if niether tools
@@ -119,105 +133,102 @@ get_yn() {
 # usage: download "http://www.google.com" [OPTIONAL_DOWNLOAD_PATH]
 # requires: has err
 download() {
-	local dwn_cmd
-	if has curl; then
-		dwn_cmd="curl"
-		if [ "$#" -eq "2" ]; then
-			dwn_cmd="$dwn_cmd -o $2"
-		else
-			dwn_cmd="$dwn_cmd -O"
-		fi
-	else
-		if has wget; then
-			dwn_cmd="wget"
-			if [ "$#" -eq "2" ]; then
-				dwn_cmd="$dwn_cmd -O $2"
-			fi
-		else
-			err "neither curl nor wget are available!"
-		fi
-	fi
-	$dwn_cmd "$1"
+    local dwn_cmd
+    if has curl; then
+        dwn_cmd="curl"
+        if [ "$#" -eq "2" ]; then
+            dwn_cmd="$dwn_cmd -o $2"
+        else
+            dwn_cmd="$dwn_cmd -O"
+        fi
+    else
+        if has wget; then
+            dwn_cmd="wget"
+            if [ "$#" -eq "2" ]; then
+                dwn_cmd="$dwn_cmd -O $2"
+            fi
+        else
+            err "neither curl nor wget are available!"
+        fi
+    fi
+    $dwn_cmd "$1"
 }
 
 
-# desc: extract a file (tar|tar.gz|zip|rar) to the local directory or a
+# desc: extract a file (tar|tar.gz|zip|rar) either to the current directory or a
 # desc: specified path. Based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
 # desc: written by [xvoland](https://github.com/xvoland).
 # usage: extract thing.tar.gz [MAYBE/TO/HERE]
-# requires: require err
+# requires: require err broke
 extract() {
-	if [ -f "$1" ] ; then
-	    case "$1" in
-	      	*.tar|*.tar.bz2|*.bz2|*.tbz2)
-				require tar
-				local extractr="tar"
-
-				filename="${fullfile##*/}"
-				ext=="${filename#*.}"
-
-				if [ "$ext" = "tar" ]; then
-					extractr="$extractr xvf"
-				elif [ "$ext" = "tar.bz2" ] || [ "$ext" = "bz2" ] || [ "$ext" = "tbz2" ]; then
-					extractr="$extractr xvjf"
-				elif [ "$ext" = "tar.gz" ] || [ "$ext" = "tgz"] || [ "$ext" = "tar.xz" ]; then
-					extractr="$extractr xvzf"
-				fi
-
-	        	if [ "$#" -eq "2" ]; then
-	        		extractr="$extractr -C $2"
-	        	fi
-
-				$extractr
-
-				if [ "$#" -eq "2" ]; then
-	        		ok "couldn't extract $1 to $2"
-				else
-					ok "couldn't extract $1"
-	        	fi
-	      	;;
-	      	*.lzma)
-	      	    unlzma "$1"
-	      	;;
-	      	*.rar)
-	      	    local extractr="unrar x -ad $1"
-	      	    if [ "$#" -eq "2" ]; then
-	      	    	local current=`pwd`
-	      	    	if [ ! -d "$2" ]; then
-	      	    		mkdir -p "$2"
-	      	    	fi
-	      	    	cd "$2"
-	      	    fi
-	      	    $extractr
-	      	    if [ "$#" -eq "2" ]; then
-	      	    	cd "$current"
-	      	    fi
-	      	;;
-	      	*.gz)
-	      	    gunzip "$1"
-	      	;;
-	      	*.zip)
-	      	    unzip "$1"
-	      	;;
-	      	*.Z)
-	      	    uncompress "$1"
-	      	;;
-	      	*.7z)
-	      	    7z x "$1"
-	      	;;
-	      	*.xz)
-	      	    unxz "$1"
-	      	;;
-	      	*.exe)
-	      	    cabextract "$1"
-	      	;;
-	      	*)
-	      	    err "$1 - unknown archive type"
-	      	;;
-	    esac
-	else
-	    err "$1 does not exist"
-	fi
+    if [ -f "$1" ] ; then
+        case "$1" in
+          	*.tar|*.tar.bz2|*.bz2|*.tbz2)
+	            require tar
+	            local extractr="tar"
+	            filename="${fullfile##*/}"
+	            ext="${filename#*.}"
+	            if [ "$ext" = "tar" ]; then
+	                extractr="$extractr xvf"
+	            elif [ "$ext" = "tar.bz2" ] || [ "$ext" = "bz2" ] || [ "$ext" = "tbz2" ]; then
+	                extractr="$extractr xvjf"
+	            elif [ "$ext" = "tar.gz" ] || [ "$ext" = "tgz"] || [ "$ext" = "tar.xz" ]; then
+	                extractr="$extractr xvzf"
+	            fi
+	            if [ "$#" -eq "2" ]; then
+	                extractr="$extractr -C $2"
+	            fi
+	            $extractr
+	            if [ "$#" -eq "2" ]; then
+	                ok "couldn't extract $1 to $2"
+	            else
+	                ok "couldn't extract $1"
+	            fi
+	        ;;
+            *.rar)
+	            local extractr="unrar x -ad $1"
+	            if [ "$#" -eq "2" ]; then
+	                local current=`pwd`
+	                if [ ! -d "$2" ]; then
+	                    mkdir -p "$2"
+	                fi
+	                cd "$2"
+	            fi
+	            $extractr
+	            if broke; then
+	                if [ "$#" -eq "2" ]; then
+	                    cd "$current"
+	                    err "couldn't extract $1 to $2"
+	                fi
+	                err "couldn't extract $1"
+	            fi
+          	;;
+	        *.lzma)
+	            unlzma "$1"
+	        ;;
+	        *.gz)
+	            gunzip "$1"
+	        ;;
+	        *.zip)
+	            unzip "$1"
+	        ;;
+	        *.Z)
+	            uncompress "$1"
+	        ;;
+	        *.7z)
+	            7z x "$1"
+	        ;;
+	        *.xz)
+	            unxz "$1"
+	        ;;
+	        *.exe)
+	            cabextract "$1"
+	        ;;
+	        *)
+	            err "$1 - unknown archive type"
+	        ;;
+        esac
+    else
+        err "$1 does not exist"
+    fi
 }
-
-extract test.tar.gz
