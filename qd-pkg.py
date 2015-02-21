@@ -19,7 +19,7 @@ def get_all_reqs(qdjson, functions):
 def run():
 	parser = argparse.ArgumentParser(description="build a minified shell script from a quick-doc commented shell script with only the functions you want (and their requirements).")
 	parser.add_argument("input_file")
-	parser.add_argument("functions", nargs="+")
+	parser.add_argument("-f", "--functions", nargs="+")
 	parser.add_argument("-o", "--output-file", nargs="?", type=argparse.FileType("w"), default=sys.stdout)
 	parser.add_argument("-lf", "--list-functions", action="store_true", default=False)
 	args = parser.parse_args()
