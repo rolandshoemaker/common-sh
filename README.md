@@ -321,7 +321,6 @@ extract() {
             *.rar)
 	            local extractr="unrar x -ad $1"
 	            if [ "$#" -eq "2" ]; then
-	                local current=`pwd`
 	                if [ ! -d "$2" ]; then
 	                    mkdir -p "$2"
 	                fi
@@ -330,7 +329,7 @@ extract() {
 	            $extractr
 	            if broke; then
 	                if [ "$#" -eq "2" ]; then
-	                    cd "$current"
+	                    cd -
 	                    err "couldn't extract $1 to $2"
 	                fi
 	                err "couldn't extract $1"
