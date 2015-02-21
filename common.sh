@@ -242,13 +242,14 @@ extract() {
 
 # desc: calculate the fibonacci sequence for ***n*** iterations.
 # usage: fibonacii 10
+# usage:   0 1 1 2 3 5 8 13 21 34
 # requires: p
 fibonacci() {
 	local a=0
 	local b=1
 	local iters=0
 	while [ $iters -lt $1 ]; do
-		p "$iters: $a"
+		echo -n "$a "
 		local n=`expr $a + $b`
 		a=$b
 		b=$n
