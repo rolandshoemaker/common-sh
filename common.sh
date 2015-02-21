@@ -239,6 +239,20 @@ extract() {
     fi
 }
 
+gen_pw() {
+
+}
+
+# desc: get external (internet facing) IP address using the
+# desc: [opendns](https://opendns.com) DNS resolver and dig.
+# desc: should add some curl/wget fallback type dealio...?
+# usage: myip=$( w_ip )
+# requires: require
+w_ip() {
+	require dig
+	echo `dig +short myip.opendns.com @resolver1.opendns.com`
+}
+
 # desc: calculate the fibonacci sequence for ***n*** iterations.
 # usage: fibonacii 10
 # usage:   0 1 1 2 3 5 8 13 21 34
@@ -255,3 +269,4 @@ fibonacci() {
 		iters=`expr $iters + 1`
 	done
 }
+
