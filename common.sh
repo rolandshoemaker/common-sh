@@ -139,3 +139,85 @@ download() {
 	fi
 	$dwn_cmd "$1"
 }
+
+
+# desc: extract a file (tar|tar.gz|zip|rar) to the local directory or a
+# desc: specified path. Based on [extract.sh](https://github.com/xvoland/Extract/blob/master/extract.sh)
+# desc: written by [xvoland](https://github.com/xvoland).
+# usage: extract thing.tar.gz [MAYBE/TO/HERE]
+# requires: require err
+extract() {
+	if [ -f "$1" ] ; then
+	    case "$1" in
+	      	*.tar|*.tar.bz2|*.bz2|*.tbz2)
+				require tar
+				local extractr="tar"
+
+				filename="${fullfile##*/}"
+				ext=="${filename#*.}"
+
+				if [ "$ext" = "tar" ]; then
+					extractr="$extractr xvf"
+				elif [ "$ext" = "tar.bz2" ] || [ "$ext" = "bz2" ] || [ "$ext" = "tbz2" ]; then
+					extractr="$extractr xvjf"
+				elif [ "$ext" = "tar.gz" ] || [ "$ext" = "tgz"] || [ "$ext" = "tar.xz" ]; then
+					extractr="$extractr xvzf"
+				fi
+
+	        	if [ "$#" -eq "2" ]; then
+	        		extractr="$extractr -C $2"
+	        	fi
+
+				$extractr
+
+				if [ "$#" -eq "2" ]; then
+	        		ok "couldn't extract $1 to $2"
+				else
+					ok "couldn't extract $1"
+	        	fi
+	      	;;
+	      	*.lzma)
+	      	    unlzma "$1"
+	      	;;
+	      	*.rar)
+	      	    local extractr="unrar x -ad $1"
+	      	    if [ "$#" -eq "2" ]; then
+	      	    	local current=`pwd`
+	      	    	if [ ! -d "$2" ]; then
+	      	    		mkdir -p "$2"
+	      	    	fi
+	      	    	cd "$2"
+	      	    fi
+	      	    $extractr
+	      	    if [ "$#" -eq "2" ]; then
+	      	    	cd "$current"
+	      	    fi
+	      	;;
+	      	*.gz)
+	      	    gunzip "$1"
+	      	;;
+	      	*.zip)
+	      	    unzip "$1"
+	      	;;
+	      	*.Z)
+	      	    uncompress "$1"
+	      	;;
+	      	*.7z)
+	      	    7z x "$1"
+	      	;;
+	      	*.xz)
+	      	    unxz "$1"
+	      	;;
+	      	*.exe)
+	      	    cabextract "$1"
+	      	;;
+	      	*)
+	      	    err "$1 - unknown archive type"
+	      	;;
+	    esac
+	else
+	    err "$1 does not exist"
+	fi
+}
+
+extract test.tar.gz
