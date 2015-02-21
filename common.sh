@@ -204,24 +204,31 @@ extract() {
 	            fi
           	;;
 	        *.lzma)
+				require unlzma
 	            unlzma "$1"
 	        ;;
 	        *.gz)
+				require gunzip
 	            gunzip "$1"
 	        ;;
 	        *.zip)
+				require unzip
 	            unzip "$1"
 	        ;;
 	        *.Z)
+				require uncompress
 	            uncompress "$1"
 	        ;;
 	        *.7z)
+				require 7z
 	            7z x "$1"
 	        ;;
 	        *.xz)
+				require unxz
 	            unxz "$1"
 	        ;;
 	        *.exe)
+				require cabextract
 	            cabextract "$1"
 	        ;;
 	        *)
