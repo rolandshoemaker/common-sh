@@ -239,6 +239,7 @@ extract() {
     fi
 }
 
+# desc: generate a password.
 gen_pw() {
 
 }
