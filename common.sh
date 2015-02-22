@@ -245,19 +245,37 @@ gen_pw() {
 }
 
 # desc: get external (internet facing) IP address using the
-# desc: [opendns](https://opendns.com) DNS resolver and dig.
+# desc: [opendns](https://opendns.com) DNS resolver and `dig`.
 # desc: should add some curl/wget fallback type dealio...? (should also accept -6 option for get ipv6 addr!
-# usage: myip=$( w_ip )
+# usage: myip=$( w_ip [v6] )
 # requires: require
 w_ip() {
 	require dig
-	echo `dig +short myip.opendns.com @resolver1.opendns.com`
+	dig_cmd="dig +short"
+	if [ "$#" -eq "1" ] && [ "$1" = "v6" ]; then
+		dig_cmd="$dig_cmd AAAA"
+	fi
+	echo `$dig_cmd myip.opendns.com @resolver1.opendns.com`
+}
+
+# desc: log all the things to somewhere (default: ./script.sh.log) ***need to test!***
+# usage: log_all [OPTIONAL_PATH_TO_LOG]
+# requires: require
+log_all() {
+	require tee
+	local location
+	if [ "$#" -eq "1" ]; then
+		location="$1"
+	else
+		script=`basename $0`
+		location="$script.lo"g
+	fi
+	exec >& >(tee -a "$location")
 }
 
 # desc: calculate the fibonacci sequence for ***n*** iterations.
 # usage: fibonacii 10
 # usage:   0 1 1 2 3 5 8 13 21 34
-# requires: p
 fibonacci() {
 	local a=0
 	local b=1

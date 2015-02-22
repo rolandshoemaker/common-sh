@@ -5,16 +5,18 @@ from subprocess import Popen, PIPE, sys
 QD_CMD = "/home/roland/code/python/quick-doc/quick-doc.py -ja -i"
 
 def list_functions(qdjson):
+	fs = len(qdjson)
+	print("##############%s" % ("#"*len(str(fs))))
+	print("# %d functions #" % (fs))
+	print("##############%s\n" % ("#"*len(str(fs))))
+
 	for b in qdjson:
-		print(b["name"])
-		[print("  |-> %s" % (r)) for r in b["requires"]]
+		print("  %s" % (b["name"]))
+		[print("    |-> %s" % (r)) for r in b["requires"]]
+		print()
 
 def get_all_reqs(qdjson, functions):
-	requirements = []
-	for b in qdjson:
-		if b["name"] in functions:
-			requirements += b["requires"]
-	return set(requirements+functions)
+	return set(functions+[r for b in qdjson if b["name"] in functions for r in b["requires"]])
 
 def run():
 	parser = argparse.ArgumentParser(description="build a minified shell script from a quick-doc commented shell script with only the functions you want (and their requirements).")
@@ -32,7 +34,6 @@ def run():
 	elif len(args.functions) > 0:
 		reqs = get_all_reqs(qd_json, args.functions)
 		args.output_file.write("\n\n".join(["\n".join(b["source"]) for b in qd_json if b["name"] in reqs]))
-
 
 if __name__ == "__main__":
 	run()
