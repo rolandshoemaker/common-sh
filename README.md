@@ -40,6 +40,7 @@ The good part!
 * [`extract`](#extract)
 * [`gen_pw`](#gen_pw)
 * [`w_ip`](#w_ip)
+* [`log_all`](#log_all)
 * [`fibonacci`](#fibonacci)
 
 ## `p`
@@ -396,11 +397,11 @@ gen_pw() {
 ## `w_ip`
 
 get external (internet facing) IP address using the
-[opendns](https://opendns.com) DNS resolver and dig.
+[opendns](https://opendns.com) DNS resolver and `dig`.
 should add some curl/wget fallback type dealio...? (should also accept -6 option for get ipv6 addr!
 
 ```sh
-myip=$( w_ip )
+myip=$( w_ip [v6] )
 ```
 
 ### Source
@@ -408,7 +409,39 @@ myip=$( w_ip )
 ```sh
 w_ip() {
 	require dig
-	echo `dig +short myip.opendns.com @resolver1.opendns.com`
+	dig_cmd="dig +short"
+	if [ "$#" -eq "1" ] && [ "$1" = "v6" ]; then
+		dig_cmd="$dig_cmd AAAA"
+	fi
+	echo `$dig_cmd myip.opendns.com @resolver1.opendns.com`
+}
+```
+
+### Requires
+
+* [`require`](#require)
+
+## `log_all`
+
+log all the things to somewhere (default: ./script.sh.log) ***need to test!***
+
+```sh
+log_all [OPTIONAL_PATH_TO_LOG]
+```
+
+### Source
+
+```sh
+log_all() {
+	require tee
+	local location
+	if [ "$#" -eq "1" ]; then
+		location="$1"
+	else
+		script=`basename $0`
+		location="$script.lo"g
+	fi
+	exec >& >(tee -a "$location")
 }
 ```
 
@@ -441,7 +474,3 @@ fibonacci() {
 	done
 }
 ```
-
-### Requires
-
-* [`p`](#p)
